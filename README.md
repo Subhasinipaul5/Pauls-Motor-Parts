@@ -113,16 +113,6 @@ Uploaded images are saved to `backend/uploads/` and served at `/uploads/filename
 
 The site works fully with **only MongoDB configured** — everything else gracefully degrades.
 
----
-
-## 💬 Update Your WhatsApp Number
-
-Replace `91XXXXXXXXXX` with your real number in:
-- `frontend/index.html`
-- `frontend/pages/products.html`
-- `frontend/assets/js/app.js`
-
----
 
 ## 🔧 Tech Stack
 
