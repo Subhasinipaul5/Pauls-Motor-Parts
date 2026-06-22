@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Orders — Pauls Motor Parts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <style>
+    @media (max-width: 768px) {
+      main { padding: 40px 16px !important; }
+      h1 { font-size: 2rem !important; }
+    }
+    @media (max-width: 480px) {
+      main { padding: 32px 14px !important; }
+    }
+  </style>
+</head>
+<body>
+  <!-- 3D animated background -->
+  <div class="bg-3d-layer">
+    <div class="bg-3d-orb orb-1"></div>
+    <div class="bg-3d-orb orb-2"></div>
+    <div class="bg-3d-orb orb-3"></div>
+    <div class="bg-3d-orb orb-4"></div>
+  </div>
+  <div style="background:#0c1810;border-bottom:1px solid rgba(170,230,180,0.14);padding:14px 48px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;">
+    <a href="/" style="font-size:1.4rem;font-weight:700;color:#fff;text-decoration:none;letter-spacing:-0.03em;">🔧 Pauls<span style="color:#4ade80;">Motor</span></a>
+    <div style="display:flex;gap:28px;">
+      <a href="/" style="color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.9rem;">Home</a>
+      <a href="/products" style="color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.9rem;">Products</a>
+    </div>
+    <button onclick="doLogout()" style="background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.1);padding:9px 20px;border-radius:8px;font-size:0.875rem;cursor:pointer;font-family:inherit;">Logout</button>
+  </div>
+
+  <main style="background:#0c1810;min-height:100vh;padding:60px 48px;">
+    <div style="max-width:900px;margin:0 auto;">
+      <h1 style="font-size:2.5rem;font-weight:800;color:#fff;margin:0 0 8px 0;letter-spacing:-0.03em;">My Orders</h1>
+      <p style="color:rgba(255,255,255,0.4);margin:0 0 40px 0;">Track and view your order history</p>
+      <div id="orders-list"></div>
+    </div>
+  </main>
+
+  <script src="/assets/js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (!authToken) { window.location.href = '/'; return; }
+      loadOrders();
+    });
+
+    async function loadOrders() {
+      const list = document.getElementById('orders-list');
+      list.innerHTML = '<div style="text-align:center;padding:60px 0;color:rgba(255,255,255,0.3);">Loading orders...</div>';
+      try {
+        const r = await fetch('/api/orders/my', { headers: authHeaders() });
+        const d = await r.json();
+        if (!d.orders?.length) {
+          list.innerHTML = `<div style="text-align:center;padding:80px 0;">
+            <div style="font-size:4rem;margin-bottom:20px;">📦</div>
+            <p style="color:rgba(255,255,255,0.4);font-size:1.1rem;margin-bottom:24px;">No orders yet</p>
+            <a href="/products" style="background:#4ade80;color:#000;padding:14px 28px;border-radius:10px;font-weight:700;text-decoration:none;">Browse Parts →</a>
+          </div>`;
+          return;
+        }
+        const statusColors = { placed:'#4ade80', confirmed:'#3b82f6', processing:'#eab308', ready:'#8b5cf6', delivered:'#22c55e', cancelled:'#ef4444' };
+        list.innerHTML = d.orders.map(o => `
+          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;margin-bottom:20px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:12px;">
+              <div>
+                <p style="color:#fff;font-weight:700;font-size:1.1rem;margin:0 0 4px 0;">${o.orderId}</p>
+                <p style="color:rgba(255,255,255,0.35);font-size:0.8rem;margin:0;">${new Date(o.createdAt).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})}</p>
+              </div>
+              <span style="background:${statusColors[o.status]||'#666'}22;color:${statusColors[o.status]||'#666'};border:1px solid ${statusColors[o.status]||'#666'}44;padding:6px 14px;border-radius:20px;font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;">${o.status}</span>
+            </div>
+            <div style="border-top:1px solid rgba(255,255,255,0.06);padding-top:16px;">
+              ${o.items.map(i=>`
+                <div style="display:flex;gap:14px;padding:8px 0;align-items:center;">
+                  <img src="${i.image||'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=60'}" style="width:48px;height:48px;object-fit:cover;border-radius:8px;flex-shrink:0;" onerror="this.style.background='rgba(170,230,180,0.14)'">
+                  <div style="flex:1;">
+                    <p style="color:#fff;font-size:0.875rem;font-weight:500;margin:0 0 2px 0;">${i.name}</p>
+                    <p style="color:rgba(255,255,255,0.35);font-size:0.8rem;margin:0;">Qty: ${i.quantity} × ₹${i.discountedPrice?.toLocaleString('en-IN')}</p>
+                  </div>
+                  <p style="color:#fff;font-weight:700;font-size:0.9rem;">₹${(i.discountedPrice*i.quantity).toLocaleString('en-IN')}</p>
+                </div>`).join('')}
+            </div>
+            <div style="border-top:1px solid rgba(255,255,255,0.06);padding-top:16px;margin-top:8px;display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <p style="color:rgba(255,255,255,0.4);font-size:0.8rem;margin:0 0 2px 0;">Payment: ${o.payment?.method?.toUpperCase()} · <span style="color:${o.payment?.status==='paid'?'#22c55e':'#4ade80'}">${o.payment?.status}</span></p>
+              </div>
+              <div style="text-align:right;">
+                ${o.discountAmount > 0 ? `<p style="color:#22c55e;font-size:0.8rem;margin:0 0 2px 0;">Saved ₹${o.discountAmount.toLocaleString('en-IN')}</p>` : ''}
+                <p style="color:#fff;font-weight:800;font-size:1.1rem;margin:0;">₹${o.finalAmount?.toLocaleString('en-IN')}</p>
+              </div>
+            </div>
+          </div>`).join('');
+      } catch(e) {
+        list.innerHTML = '<p style="color:#f87171;text-align:center;padding:40px;">Error loading orders.</p>';
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pauls Motor Parts — Premium Auto Parts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+
+<!-- 3D animated background -->
+<div class="bg-3d-layer">
+  <div class="bg-3d-orb orb-1"></div>
+  <div class="bg-3d-orb orb-2"></div>
+  <div class="bg-3d-orb orb-3"></div>
+  <div class="bg-3d-orb orb-4"></div>
+</div>
+
+<!-- ===== HERO SECTION ===== -->
+<section id="hero" style="position:relative;width:100%;height:100vh;overflow:hidden;">
+  <video id="hero-video" autoplay muted loop playsinline
+    style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;">
+    <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260403_050628_c4e32401-fab4-4a27-b7a8-6e9291cd5959.mp4" type="video/mp4">
+  </video>
+
+  <!-- Navbar -->
+  <div style="position:relative;z-index:10;padding:24px 48px 0 48px;">
+    <nav class="liquid-glass" style="border-radius:14px;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;">
+      <a href="/" style="font-size:1.5rem;font-weight:700;color:#fff;text-decoration:none;letter-spacing:-0.03em;">
+        🔧 Pauls<span style="color:#4ade80;">Motor</span>
+      </a>
+      <div class="nav-links-center" style="display:flex;gap:2.5rem;align-items:center;">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/products" class="nav-link">Products</a>
+        <a href="#categories" class="nav-link">Categories</a>
+        <a href="#about" class="nav-link">About</a>
+        <a href="#contact" class="nav-link">Contact</a>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center;">
+        <button onclick="openCart()" class="nav-icon-btn" title="Cart">
+          🛒 <span id="cart-badge" style="background:#4ade80;color:#000;border-radius:50%;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;">0</span>
+        </button>
+        <button onclick="window.location.href='/login'" id="auth-btn" style="background:#fff;color:#000;padding:10px 22px;border-radius:8px;border:none;font-size:0.875rem;font-weight:600;cursor:pointer;font-family:inherit;">Login</button>
+        <button onclick="openChatbot()" class="liquid-glass" style="border:1px solid rgba(255,255,255,0.2);color:#fff;padding:10px 22px;border-radius:8px;font-size:0.875rem;font-weight:500;cursor:pointer;font-family:inherit;">AI Assistant</button>
+        <button class="hamburger-btn" onclick="toggleMobileNav()" title="Menu" aria-label="Open menu">☰</button>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Mobile Nav Drawer -->
+  <div class="mobile-nav-overlay" id="mobile-nav-overlay" onclick="toggleMobileNav(false)"></div>
+  <div class="mobile-nav-drawer" id="mobile-nav-drawer">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+      <span style="color:#fff;font-weight:700;font-size:1.1rem;">Menu</span>
+      <button onclick="toggleMobileNav(false)" style="background:none;border:none;color:rgba(255,255,255,0.5);font-size:1.4rem;cursor:pointer;">✕</button>
+    </div>
+    <a href="/" onclick="toggleMobileNav(false)">🏠 Home</a>
+    <a href="/products" onclick="toggleMobileNav(false)">🔧 Products</a>
+    <a href="#categories" onclick="toggleMobileNav(false)">📂 Categories</a>
+    <a href="#about" onclick="toggleMobileNav(false)">⭐ About</a>
+    <a href="#contact" onclick="toggleMobileNav(false)">✉️ Contact</a>
+    <a href="/orders" onclick="toggleMobileNav(false)">📦 My Orders</a>
+    <a href="/admin" id="admin-panel-link-mobile" onclick="toggleMobileNav(false)" style="display:none;color:#4ade80;font-weight:700;">🛠️ Admin Dashboard</a>
+    <a href="#" onclick="openChatbot();toggleMobileNav(false);return false;">🤖 AI Assistant</a>
+  </div>
+
+  <!-- Hero Content -->
+  <div style="position:relative;z-index:10;height:calc(100vh - 120px);padding:0 48px;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:80px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;align-items:flex-end;gap:40px;">
+      <!-- Left -->
+      <div>
+        <h1 id="hero-heading" style="font-size:clamp(3rem,6vw,5.5rem);font-weight:700;color:#fff;line-height:1.05;letter-spacing:-0.04em;margin:0 0 20px 0;"></h1>
+        <p id="hero-sub" style="color:rgba(255,255,255,0.75);font-size:1.15rem;font-weight:400;margin:0 0 32px 0;max-width:480px;opacity:0;transition:opacity 1s ease;line-height:1.6;">
+          Genuine OEM & aftermarket auto parts for every vehicle. Expert guidance, fast availability, and the best prices in India.
+        </p>
+        <div id="hero-btns" style="display:flex;gap:16px;flex-wrap:wrap;opacity:0;transition:opacity 1s ease;">
+          <a href="/products" style="background:#4ade80;color:#000;padding:14px 32px;border-radius:10px;font-weight:700;text-decoration:none;font-size:1rem;transition:0.2s;">Shop Parts</a>
+          <button onclick="openChatbot()" class="liquid-glass" style="border:1px solid rgba(255,255,255,0.25);color:#fff;padding:14px 32px;border-radius:10px;font-weight:500;font-size:1rem;cursor:pointer;font-family:inherit;transition:0.3s;">AI Parts Finder 🤖</button>
+        </div>
+      </div>
+      <!-- Right tag -->
+      <div id="hero-tag" style="display:flex;align-items:flex-end;justify-content:flex-end;opacity:0;transition:opacity 1s ease;">
+        <div class="liquid-glass" style="border:1px solid rgba(255,255,255,0.2);padding:18px 28px;border-radius:14px;">
+          <p style="color:rgba(255,255,255,0.9);font-size:1.4rem;font-weight:300;margin:0;">Engine. Brakes. Electrical.</p>
+          <p style="color:rgba(74,222,128,0.9);font-size:0.9rem;font-weight:500;margin:8px 0 0 0;">40+ Part Categories · Genuine Brands</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TRUSTED BRANDS TICKER ===== -->
+<div style="background:#0c1810;border-top:1px solid rgba(170,230,180,0.14);border-bottom:1px solid rgba(170,230,180,0.14);padding:18px 0;overflow:hidden;">
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <span>BOSCH</span><span>·</span><span>NGK</span><span>·</span><span>MRF</span><span>·</span><span>DENSO</span><span>·</span><span>EXIDE</span><span>·</span><span>VALEO</span><span>·</span><span>CASTROL</span><span>·</span><span>MOBIL</span><span>·</span><span>K&amp;N</span><span>·</span><span>GATES</span><span>·</span><span>APOLLO</span><span>·</span><span>MINDA</span><span>·</span><span>FEDERAL-MOGUL</span><span>·</span><span>HELLA</span><span>·</span>
+      <span>BOSCH</span><span>·</span><span>NGK</span><span>·</span><span>MRF</span><span>·</span><span>DENSO</span><span>·</span><span>EXIDE</span><span>·</span><span>VALEO</span><span>·</span><span>CASTROL</span><span>·</span><span>MOBIL</span><span>·</span><span>K&amp;N</span><span>·</span><span>GATES</span><span>·</span><span>APOLLO</span><span>·</span><span>MINDA</span><span>·</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CATEGORIES ===== -->
+<section id="categories" style="background:#0c1810;padding:100px 48px;">
+  <div style="max-width:1400px;margin:0 auto;">
+    <div style="margin-bottom:60px;">
+      <span style="color:#4ade80;font-size:0.875rem;font-weight:600;text-transform:uppercase;letter-spacing:3px;">Browse</span>
+      <h2 style="font-size:clamp(2.5rem,4vw,3.5rem);font-weight:700;color:#fff;margin:12px 0 0 0;letter-spacing:-0.03em;">Shop by Category</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;" id="categories-grid">
+      <!-- Filled by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ===== FEATURED PRODUCTS ===== -->
+<section id="featured" style="background:#0c1810;padding:100px 48px;">
+  <div style="max-width:1400px;margin:0 auto;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:60px;flex-wrap:wrap;gap:20px;">
+      <div>
+        <span style="color:#4ade80;font-size:0.875rem;font-weight:600;text-transform:uppercase;letter-spacing:3px;">Trending</span>
+        <h2 style="font-size:clamp(2.5rem,4vw,3.5rem);font-weight:700;color:#fff;margin:12px 0 0 0;letter-spacing:-0.03em;">Featured Parts</h2>
+      </div>
+      <a href="/products" style="color:#4ade80;text-decoration:none;font-weight:600;font-size:1rem;display:flex;align-items:center;gap:8px;">View All Parts →</a>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;" id="featured-grid">
+      <!-- Filled by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ===== AI VISUAL SEARCH BANNER ===== -->
+<section style="background:linear-gradient(135deg,rgba(170,230,180,0.10) 0%,#1a0a00 50%,rgba(170,230,180,0.10) 100%);padding:100px 48px;position:relative;overflow:hidden;">
+  <div style="position:absolute;top:-100px;right:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(74,222,128,0.15) 0%,transparent 70%);border-radius:50%;pointer-events:none;"></div>
+  <div style="max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;">
+    <div>
+      <span style="color:#4ade80;font-size:0.875rem;font-weight:600;text-transform:uppercase;letter-spacing:3px;">AI-Powered</span>
+      <h2 style="font-size:clamp(2rem,4vw,3.2rem);font-weight:700;color:#fff;margin:12px 0 20px 0;letter-spacing:-0.03em;">Find Parts by Photo or Description</h2>
+      <p style="color:rgba(255,255,255,0.6);font-size:1.1rem;line-height:1.7;margin-bottom:36px;">Not sure what part you need? Take a photo of the part or describe it in plain language — our AI assistant will identify it and find matching products in our catalog instantly.</p>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;">
+        <button onclick="openChatbot()" style="background:#4ade80;color:#000;padding:14px 28px;border-radius:10px;border:none;font-weight:700;font-size:1rem;cursor:pointer;font-family:inherit;">Try AI Chatbot 🤖</button>
+        <button onclick="openChatbotCamera()" style="background:rgba(255,255,255,0.08);color:#fff;padding:14px 28px;border-radius:10px;border:1px solid rgba(255,255,255,0.15);font-weight:500;font-size:1rem;cursor:pointer;font-family:inherit;">📸 Photo Search</button>
+      </div>
+    </div>
+    <div style="position:relative;">
+      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:32px;backdrop-filter:blur(10px);">
+        <div style="background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.2);border-radius:12px;padding:20px;margin-bottom:16px;">
+          <p style="color:rgba(255,255,255,0.5);font-size:0.8rem;margin:0 0 8px 0;">USER</p>
+          <p style="color:#fff;margin:0;font-size:0.95rem;">"My brake pads are making a squealing sound on my 2019 Swift. What do I need?"</p>
+        </div>
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:20px;">
+          <p style="color:#4ade80;font-size:0.8rem;margin:0 0 8px 0;">AI ASSISTANT 🔧</p>
+          <p style="color:rgba(255,255,255,0.8);margin:0;font-size:0.95rem;line-height:1.6;">For a 2019 Maruti Swift, you'll need the <strong style="color:#fff;">Bosch Front Brake Pads (BP-SWIFT-F)</strong>. The squealing usually means the wear indicator is touching the rotor. I found 3 matching products in our catalog! 👇</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== WHY US ===== -->
+<section id="about" style="background:#0c1810;padding:100px 48px;">
+  <div style="max-width:1400px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:70px;">
+      <span style="color:#4ade80;font-size:0.875rem;font-weight:600;text-transform:uppercase;letter-spacing:3px;">Why Choose Us</span>
+      <h2 style="font-size:clamp(2.5rem,4vw,3.5rem);font-weight:700;color:#fff;margin:12px 0 0 0;letter-spacing:-0.03em;">Built for the Modern Mechanic</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;">
+      <div class="feat-card">
+        <div style="font-size:2.5rem;margin-bottom:20px;">🏆</div>
+        <h3 style="color:#fff;font-size:1.2rem;font-weight:700;margin:0 0 12px 0;">Genuine Quality</h3>
+        <p style="color:rgba(255,255,255,0.5);font-size:0.95rem;line-height:1.6;margin:0;">OEM and genuine parts from trusted global manufacturers. Zero counterfeits, ever.</p>
+      </div>
+      <div class="feat-card">
+        <div style="font-size:2.5rem;margin-bottom:20px;">🤖</div>
+        <h3 style="color:#fff;font-size:1.2rem;font-weight:700;margin:0 0 12px 0;">AI Parts Finder</h3>
+        <p style="color:rgba(255,255,255,0.5);font-size:0.95rem;line-height:1.6;margin:0;">Describe your problem or take a photo — our AI identifies and locates the exact part.</p>
+      </div>
+      <div class="feat-card">
+        <div style="font-size:2.5rem;margin-bottom:20px;">💳</div>
+        <h3 style="color:#fff;font-size:1.2rem;font-weight:700;margin:0 0 12px 0;">Secure Payments</h3>
+        <p style="color:rgba(255,255,255,0.5);font-size:0.95rem;line-height:1.6;margin:0;">Pay safely via Razorpay — cards, UPI, net banking, and wallets all accepted.</p>
+      </div>
+      <div class="feat-card">
+        <div style="font-size:2.5rem;margin-bottom:20px;">🔧</div>
+        <h3 style="color:#fff;font-size:1.2rem;font-weight:700;margin:0 0 12px 0;">Expert Guidance</h3>
+        <p style="color:rgba(255,255,255,0.5);font-size:0.95rem;line-height:1.6;margin:0;">Our team knows parts. Not sure about fitment? We'll help you find the right one.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTACT / WHATSAPP ===== -->
+<section id="contact" style="background:#0c1810;padding:100px 48px;">
+  <div style="max-width:900px;margin:0 auto;text-align:center;">
+    <span style="color:#4ade80;font-size:0.875rem;font-weight:600;text-transform:uppercase;letter-spacing:3px;">Get In Touch</span>
+    <h2 style="font-size:clamp(2.5rem,4vw,3.5rem);font-weight:700;color:#fff;margin:16px 0 24px 0;letter-spacing:-0.03em;">Need Help Finding a Part?</h2>
+    <p style="color:rgba(255,255,255,0.5);font-size:1.1rem;line-height:1.7;margin:0 0 48px 0;max-width:600px;margin-left:auto;margin-right:auto;">Our experts are available 6 days a week. Reach us via WhatsApp for bulk orders, part identification, and fitment advice.</p>
+    <div style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap;">
+      <a href="https://wa.me/91XXXXXXXXXX?text=Hi! I need help finding a motor part." target="_blank"
+        style="background:#25D366;color:#fff;padding:16px 36px;border-radius:12px;font-weight:700;text-decoration:none;font-size:1.1rem;display:flex;align-items:center;gap:10px;">
+        💬 WhatsApp Us
+      </a>
+      <a href="mailto:paulsubhasini31@gmail.com"
+        style="background:rgba(255,255,255,0.08);color:#fff;padding:16px 36px;border-radius:12px;font-weight:500;text-decoration:none;font-size:1.1rem;border:1px solid rgba(255,255,255,0.12);">
+        ✉️ paulsubhasini31@gmail.com
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer style="background:#08120d;border-top:1px solid rgba(170,230,180,0.10);padding:60px 48px 32px;">
+  <div style="max-width:1400px;margin:0 auto;">
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:60px;">
+      <div>
+        <h3 style="font-size:1.5rem;font-weight:700;color:#fff;margin:0 0 16px 0;letter-spacing:-0.02em;">🔧 Pauls<span style="color:#4ade80;">Motor</span></h3>
+        <p style="color:rgba(255,255,255,0.4);font-size:0.95rem;line-height:1.7;margin:0 0 24px 0;max-width:300px;">Your trusted partner for genuine auto parts. Serving mechanics and vehicle owners across India.</p>
+        <a href="mailto:paulsubhasini31@gmail.com" style="color:#4ade80;font-size:0.9rem;text-decoration:none;">paulsubhasini31@gmail.com</a>
+      </div>
+      <div>
+        <h4 style="color:#fff;font-size:0.9rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;margin:0 0 20px 0;">Shop</h4>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px;">
+          <li><a href="/products" class="footer-link">All Parts</a></li>
+          <li><a href="/products?category=Engine" class="footer-link">Engine</a></li>
+          <li><a href="/products?category=Brakes" class="footer-link">Brakes</a></li>
+          <li><a href="/products?category=Electrical" class="footer-link">Electrical</a></li>
+          <li><a href="/products?category=Tyres" class="footer-link">Tyres</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color:#fff;font-size:0.9rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;margin:0 0 20px 0;">Account</h4>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px;">
+          <li><a href="#" href="/login" class="footer-link">Login</a></li>
+          <li><a href="#" href="/login?tab=register" class="footer-link">Register</a></li>
+          <li><a href="/orders" class="footer-link">My Orders</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color:#fff;font-size:0.9rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;margin:0 0 20px 0;">Support</h4>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px;">
+          <li><a href="#contact" class="footer-link">Contact</a></li>
+          <li><a href="https://wa.me/91XXXXXXXXXX" class="footer-link" target="_blank">WhatsApp</a></li>
+          <li><a href="/admin" class="footer-link">Admin</a></li>
+        </ul>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(170,230,180,0.10);padding-top:32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+      <p style="color:rgba(255,255,255,0.25);font-size:0.875rem;margin:0;">&copy; 2026 Pauls Motor Parts. All rights reserved.</p>
+      <p style="color:rgba(255,255,255,0.25);font-size:0.875rem;margin:0;">Built with ❤️ for auto enthusiasts</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== AUTH MODAL ===== -->
+<div id="auth-modal" class="modal-backdrop" style="display:none;">
+  <div class="modal-box">
+    <button onclick="closeAuthModal()" style="position:absolute;top:20px;right:20px;background:none;border:none;color:rgba(255,255,255,0.4);font-size:1.5rem;cursor:pointer;">✕</button>
+    <div style="display:flex;margin-bottom:28px;gap:4px;">
+      <button id="tab-login" onclick="switchAuthTab('login')" class="auth-tab active">Login</button>
+      <button id="tab-register" onclick="switchAuthTab('register')" class="auth-tab">Register</button>
+    </div>
+    <!-- Login Form -->
+    <div id="form-login">
+      <div id="login-err" class="form-err" style="display:none;"></div>
+      <div style="background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.2);border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:0.8rem;color:rgba(74,222,128,0.85);line-height:1.5;">
+        🔌 <strong>Offline mode:</strong> Register a new account or use a previously registered email/password — works without internet!
+      </div>
+      <div class="form-group"><label>Email</label><input type="email" id="login-email" placeholder="you@email.com"></div>
+      <div class="form-group"><label>Password</label><input type="password" id="login-password" placeholder="Your password"></div>
+      <button onclick="doLogin()" class="btn-primary" id="login-btn">Sign In</button>
+      <button onclick="switchAuthTab('forgot')" style="background:none;border:none;color:rgba(255,255,255,0.4);font-size:0.875rem;cursor:pointer;margin-top:12px;font-family:inherit;">Forgot password?</button>
+    </div>
+    <!-- Register Form -->
+    <div id="form-register" style="display:none;">
+      <div id="reg-err" class="form-err" style="display:none;"></div>
+      <div id="reg-ok" class="form-ok" style="display:none;"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="form-group"><label>First Name</label><input type="text" id="reg-fname" placeholder="Paul"></div>
+        <div class="form-group"><label>Last Name <span style="opacity:0.45;font-weight:400;">(optional)</span></label><input type="text" id="reg-lname" placeholder="Smith"></div>
+      </div>
+      <div class="form-group"><label>Email</label><input type="email" id="reg-email" placeholder="you@email.com"></div>
+      <div class="form-group"><label>Phone</label><input type="tel" id="reg-phone" placeholder="+91 XXXXXXXXXX"></div>
+      <div class="form-group"><label>Password</label><input type="password" id="reg-password" placeholder="Min 6 characters"></div>
+      <button onclick="doRegister()" class="btn-primary" id="reg-btn">Create Account</button>
+    </div>
+    <!-- Forgot Password -->
+    <div id="form-forgot" style="display:none;">
+      <div id="forgot-msg" class="form-ok" style="display:none;"></div>
+      <div id="forgot-err" class="form-err" style="display:none;"></div>
+      <p style="color:rgba(255,255,255,0.5);font-size:0.9rem;margin:0 0 20px 0;">Enter your email and we'll send you a reset link.</p>
+      <div class="form-group"><label>Email</label><input type="email" id="forgot-email" placeholder="you@email.com"></div>
+      <button onclick="doForgot()" class="btn-primary">Send Reset Link</button>
+      <button onclick="switchAuthTab('login')" style="background:none;border:none;color:rgba(255,255,255,0.4);font-size:0.875rem;cursor:pointer;margin-top:12px;font-family:inherit;">← Back to Login</button>
+    </div>
+    <!-- Reset Password (shown via URL param) -->
+    <div id="form-reset" style="display:none;">
+      <div id="reset-msg" class="form-ok" style="display:none;"></div>
+      <div id="reset-err" class="form-err" style="display:none;"></div>
+      <div class="form-group"><label>New Password</label><input type="password" id="reset-password" placeholder="Min 6 characters"></div>
+      <div class="form-group"><label>Confirm Password</label><input type="password" id="reset-confirm" placeholder="Repeat password"></div>
+      <button onclick="doReset()" class="btn-primary">Set New Password</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CART DRAWER ===== -->
+<div id="cart-overlay" onclick="closeCart()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:900;"></div>
+<div id="cart-drawer" style="display:none;position:fixed;top:0;right:0;width:420px;max-width:100vw;height:100vh;background:#101f15;border-left:1px solid rgba(170,230,180,0.14);z-index:901;overflow-y:auto;padding:28px;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;">
+    <h2 style="color:#fff;font-size:1.5rem;font-weight:700;margin:0;">Your Cart 🛒</h2>
+    <button onclick="closeCart()" style="background:none;border:none;color:rgba(255,255,255,0.4);font-size:1.5rem;cursor:pointer;">✕</button>
+  </div>
+  <div id="cart-items-list"></div>
+  <div id="cart-footer" style="display:none;border-top:1px solid rgba(170,230,180,0.14);padding-top:20px;margin-top:20px;">
+    <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+      <span style="color:rgba(255,255,255,0.5);">Subtotal</span><span style="color:#fff;font-weight:600;" id="cart-subtotal">₹0</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-bottom:16px;">
+      <span style="color:#22c55e;font-size:0.9rem;">You save</span><span style="color:#22c55e;font-weight:600;" id="cart-savings">₹0</span>
+    </div>
+    <button onclick="openCheckout()" class="btn-primary" style="width:100%;padding:16px;">Proceed to Checkout →</button>
+    <a href="https://wa.me/91XXXXXXXXXX?text=I want to order via WhatsApp" target="_blank" style="display:block;text-align:center;margin-top:12px;color:rgba(255,255,255,0.4);font-size:0.875rem;text-decoration:none;">Or order via WhatsApp 💬</a>
+  </div>
+</div>
+
+<!-- ===== CHECKOUT MODAL ===== -->
+<div id="checkout-modal" class="modal-backdrop" style="display:none;">
+  <div class="modal-box" style="max-width:500px;">
+    <button onclick="document.getElementById('checkout-modal').style.display='none'" style="position:absolute;top:20px;right:20px;background:none;border:none;color:rgba(255,255,255,0.4);font-size:1.5rem;cursor:pointer;">✕</button>
+    <h2 style="color:#fff;font-size:1.5rem;font-weight:700;margin:0 0 24px 0;">Checkout</h2>
+    <div id="checkout-err" class="form-err" style="display:none;"></div>
+    <div id="checkout-ok" class="form-ok" style="display:none;"></div>
+    <div class="form-group"><label>Full Name</label><input type="text" id="co-name" placeholder="Your name"></div>
+    <div class="form-group"><label>Phone</label><input type="tel" id="co-phone" placeholder="+91 XXXXXXXXXX"></div>
+    <div class="form-group"><label>Email</label><input type="email" id="co-email" placeholder="you@email.com"></div>
+    <div class="form-group"><label>Notes (optional)</label><textarea id="co-notes" placeholder="Any notes for your order..." style="height:80px;resize:none;"></textarea></div>
+    <div style="background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.2);border-radius:10px;padding:16px;margin-bottom:20px;">
+      <div style="display:flex;justify-content:space-between;"><span style="color:rgba(255,255,255,0.6);">Order Total</span><span style="color:#fff;font-weight:700;font-size:1.2rem;" id="co-total">₹0</span></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <button onclick="placeOrderRazorpay()" class="btn-primary">Pay via Razorpay 💳</button>
+      <button onclick="placeOrderCOD()" style="background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.15);padding:14px;border-radius:10px;font-weight:600;cursor:pointer;font-family:inherit;">WhatsApp Order 💬</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== AI CHATBOT ===== -->
+<div id="chatbot-overlay" onclick="closeChatbot()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1000;"></div>
+<div id="chatbot-panel" style="display:none;position:fixed;bottom:0;right:0;width:420px;max-width:100vw;height:620px;background:#0c1810;border:1px solid rgba(170,230,180,0.14);border-radius:20px 20px 0 0;z-index:1001;display:flex;flex-direction:column;overflow:hidden;">
+  <div style="padding:18px 20px;border-bottom:1px solid rgba(170,230,180,0.14);display:flex;align-items:center;justify-content:space-between;background:#101f15;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div style="width:40px;height:40px;background:#4ade80;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;">🔧</div>
+      <div>
+        <p style="color:#fff;font-weight:600;margin:0;font-size:0.95rem;">Parts AI Assistant</p>
+        <p style="color:#22c55e;font-size:0.75rem;margin:0;">● Online</p>
+      </div>
+    </div>
+    <div style="display:flex;gap:6px;align-items:center;">
+      <button id="camera-btn" onclick="openChatbotCamera()" title="Take a photo" style="background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.3);border-radius:8px;padding:8px 10px;font-size:0.78rem;cursor:pointer;font-family:inherit;white-space:nowrap;">📸 Camera</button>
+      <button id="gallery-btn" onclick="openChatbotGallery()" title="Choose from gallery" style="background:rgba(59,130,246,0.15);color:#60a5fa;border:1px solid rgba(59,130,246,0.3);border-radius:8px;padding:8px 10px;font-size:0.78rem;cursor:pointer;font-family:inherit;white-space:nowrap;">🖼️ Gallery</button>
+      <button onclick="closeChatbot()" style="background:none;border:none;color:rgba(255,255,255,0.4);font-size:1.2rem;cursor:pointer;">✕</button>
+    </div>
+  </div>
+  <!-- Hidden file input for gallery picking -->
+  <input type="file" id="gallery-file-input" accept="image/*" style="display:none;" onchange="handleGalleryFile(this)">
+  <!-- Camera capture area -->
+  <div id="camera-area" style="display:none;padding:16px;border-bottom:1px solid rgba(170,230,180,0.14);background:#101f15;">
+    <video id="cam-video" style="width:100%;border-radius:10px;max-height:200px;object-fit:cover;" autoplay muted playsinline></video>
+    <div style="display:flex;gap:10px;margin-top:12px;">
+      <button onclick="capturePhoto()" style="flex:1;background:#4ade80;color:#000;border:none;padding:10px;border-radius:8px;font-weight:700;cursor:pointer;font-family:inherit;">📸 Capture</button>
+      <button onclick="closeCamera()" style="flex:1;background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.15);padding:10px;border-radius:8px;cursor:pointer;font-family:inherit;">Cancel</button>
+    </div>
+    <canvas id="cam-canvas" style="display:none;"></canvas>
+  </div>
+  <!-- Image preview -->
+  <div id="img-preview-area" style="display:none;padding:12px 16px;border-bottom:1px solid rgba(170,230,180,0.14);background:#101f15;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <img id="img-preview" src="" style="width:60px;height:60px;object-fit:cover;border-radius:8px;border:1px solid rgba(255,255,255,0.1);">
+      <div>
+        <p style="color:#fff;font-size:0.875rem;margin:0 0 4px 0;font-weight:500;">Photo ready to search</p>
+        <button onclick="clearPhoto()" style="color:#4ade80;background:none;border:none;font-size:0.8rem;cursor:pointer;font-family:inherit;">Remove ✕</button>
+      </div>
+    </div>
+  </div>
+  <div id="chatbot-messages" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;"></div>
+  <div style="padding:14px 16px;border-top:1px solid rgba(170,230,180,0.14);display:flex;gap:10px;align-items:center;">
+    <input id="chat-input" type="text" placeholder="Ask about any auto part..." style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:12px 16px;color:#fff;font-size:0.9rem;font-family:inherit;outline:none;" onkeydown="if(event.key==='Enter') sendChat()">
+    <button onclick="sendChat()" style="background:#4ade80;border:none;color:#000;width:42px;height:42px;border-radius:10px;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">→</button>
+  </div>
+</div>
+
+<!-- ===== FAB CHATBOT BUTTON ===== -->
+<button onclick="openChatbot()" id="chatbot-fab" title="AI Parts Assistant" style="position:fixed;bottom:28px;right:28px;width:60px;height:60px;background:#4ade80;border:none;border-radius:50%;font-size:1.5rem;cursor:pointer;z-index:800;box-shadow:0 8px 32px rgba(74,222,128,0.4);transition:transform 0.2s;">🔧</button>
+
+<!-- ===== PRODUCT QUICK VIEW MODAL ===== -->
+<div id="product-modal" class="modal-backdrop" style="display:none;">
+  <div class="modal-box" style="max-width:680px;">
+    <button onclick="closeProductModal()" style="position:absolute;top:20px;right:20px;background:none;border:none;color:rgba(255,255,255,0.4);font-size:1.5rem;cursor:pointer;">✕</button>
+    <div id="product-modal-content"></div>
+  </div>
+</div>
+
+<!-- ===== USER MENU ===== -->
+<div id="user-menu" style="display:none;position:fixed;top:80px;right:48px;background:rgba(170,230,180,0.10);border:1px solid rgba(170,230,180,0.14);border-radius:12px;padding:8px;z-index:500;min-width:200px;">
+  <div style="padding:12px 16px;border-bottom:1px solid rgba(170,230,180,0.14);margin-bottom:4px;">
+    <p style="color:#fff;font-weight:600;font-size:0.9rem;margin:0;" id="user-name-display">User</p>
+    <p style="color:rgba(255,255,255,0.4);font-size:0.8rem;margin:4px 0 0 0;" id="user-email-display"></p>
+  </div>
+  <a href="/admin" id="admin-panel-link" class="menu-item" style="display:none;color:#4ade80;font-weight:700;">🛠️ Admin Dashboard</a>
+  <a href="/orders" class="menu-item">📦 My Orders</a>
+  <button onclick="doChangePassword()" class="menu-item" style="width:100%;text-align:left;">🔑 Change Password</button>
+  <button onclick="doLogout()" class="menu-item danger" style="width:100%;text-align:left;">🚪 Logout</button>
+</div>
+
+<!-- Change PW Modal -->
+<div id="cpw-modal" class="modal-backdrop" style="display:none;">
+  <div class="modal-box" style="max-width:400px;">
+    <button onclick="document.getElementById('cpw-modal').style.display='none'" style="position:absolute;top:20px;right:20px;background:none;border:none;color:rgba(255,255,255,0.4);font-size:1.5rem;cursor:pointer;">✕</button>
+    <h2 style="color:#fff;font-weight:700;margin:0 0 24px 0;">Change Password</h2>
+    <div id="cpw-msg" class="form-ok" style="display:none;"></div>
+    <div id="cpw-err" class="form-err" style="display:none;"></div>
+    <div class="form-group"><label>Current Password</label><input type="password" id="cpw-current" placeholder="Current password"></div>
+    <div class="form-group"><label>New Password</label><input type="password" id="cpw-new" placeholder="Min 6 characters"></div>
+    <div class="form-group"><label>Confirm New Password</label><input type="password" id="cpw-confirm" placeholder="Repeat new password"></div>
+    <button onclick="submitChangePw()" class="btn-primary">Update Password</button>
+  </div>
+</div>
+
+<script src="/assets/js/app.js"></script>
+</body>
+</html>

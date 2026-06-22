@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login / Register — Pauls Motor Parts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #0a1a0a; color: #fff; min-height: 100vh; display: flex; flex-direction: column; }
+    .bg-layer { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+    .orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.18; animation: drift 14s ease-in-out infinite alternate; }
+    .orb-1 { width: 500px; height: 500px; background: #4ade80; top: -120px; left: -100px; animation-delay: 0s; }
+    .orb-2 { width: 400px; height: 400px; background: #22c55e; bottom: -80px; right: -80px; animation-delay: -5s; }
+    .orb-3 { width: 300px; height: 300px; background: #16a34a; top: 40%; left: 60%; animation-delay: -9s; }
+    @keyframes drift { from { transform: translate3d(0,0,0) scale(1); } to { transform: translate3d(30px,30px,0) scale(1.08); } }
+    nav { position: relative; z-index: 10; display: flex; align-items: center; justify-content: space-between; padding: 20px 40px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .nav-logo { font-size: 1.25rem; font-weight: 800; color: #fff; text-decoration: none; letter-spacing: -0.5px; }
+    .nav-logo span { color: #4ade80; }
+    .nav-back { color: rgba(255,255,255,0.5); font-size: 0.875rem; text-decoration: none; transition: color 0.2s; }
+    .nav-back:hover { color: #4ade80; }
+    main { position: relative; z-index: 1; flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
+    .auth-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 40px 44px; width: 100%; max-width: 460px; backdrop-filter: blur(12px); }
+    .card-logo { text-align: center; margin-bottom: 28px; }
+    .card-logo h1 { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; }
+    .card-logo h1 span { color: #4ade80; }
+    .card-logo p { color: rgba(255,255,255,0.4); font-size: 0.875rem; margin-top: 4px; }
+    .tabs { display: flex; gap: 4px; margin-bottom: 28px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 4px; }
+    .tab-btn { flex: 1; padding: 12px; border: none; border-radius: 9px; background: transparent; color: rgba(255,255,255,0.45); font-size: 0.9rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+    .tab-btn.active { background: #4ade80; color: #000; }
+    .form-panel { display: none; }
+    .form-panel.active { display: block; }
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 0.78rem; font-weight: 600; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 7px; }
+    .field input { width: 100%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 13px 16px; color: #fff; font-size: 0.95rem; font-family: inherit; outline: none; transition: border-color 0.2s; }
+    .field input:focus { border-color: #4ade80; }
+    .field input::placeholder { color: rgba(255,255,255,0.2); }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .btn-submit { width: 100%; background: #4ade80; color: #000; border: none; border-radius: 10px; padding: 14px; font-size: 1rem; font-weight: 700; cursor: pointer; font-family: inherit; transition: background 0.2s, transform 0.1s; margin-top: 4px; }
+    .btn-submit:hover { background: #22c55e; }
+    .btn-submit:active { transform: scale(0.98); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-ghost { background: none; border: none; color: rgba(255,255,255,0.4); font-size: 0.85rem; cursor: pointer; margin-top: 12px; font-family: inherit; display: block; width: 100%; text-align: center; transition: color 0.2s; }
+    .btn-ghost:hover { color: #4ade80; }
+    .msg-err { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3); border-radius: 8px; padding: 10px 14px; font-size: 0.85rem; color: #fca5a5; margin-bottom: 16px; display: none; }
+    .msg-ok  { background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.25); border-radius: 8px; padding: 10px 14px; font-size: 0.85rem; color: #86efac; margin-bottom: 16px; display: none; }
+    .msg-err a { color: #4ade80; }
+    .offline-notice { background: rgba(74,222,128,0.07); border: 1px solid rgba(74,222,128,0.18); border-radius: 8px; padding: 10px 14px; font-size: 0.8rem; color: rgba(74,222,128,0.8); line-height: 1.5; margin-bottom: 18px; }
+    @media (max-width: 520px) { .auth-card { padding: 28px 22px; } .two-col { grid-template-columns: 1fr; gap: 0; } }
+  </style>
+</head>
+<body>
+
+<div class="bg-layer">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<nav>
+  <a href="/" class="nav-logo">Paul's <span>Motor</span> Parts</a>
+  <a href="/" class="nav-back">← Back to Store</a>
+</nav>
+
+<main>
+  <div class="auth-card">
+    <div class="card-logo">
+      <h1>Paul's <span>Motor</span> Parts</h1>
+      <p>Premium Auto Parts — Sign in to your account</p>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" id="tab-login"    onclick="showTab('login')">Login</button>
+      <button class="tab-btn"        id="tab-register" onclick="showTab('register')">Register</button>
+    </div>
+
+    <!-- LOGIN PANEL -->
+    <div class="form-panel active" id="panel-login">
+      <div class="offline-notice">🔌 <strong>Works offline:</strong> Register once, then login anytime — no internet needed.</div>
+      <div class="msg-err" id="login-err"></div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="login-email" placeholder="you@email.com" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="login-password" placeholder="Your password" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <button class="btn-submit" id="login-btn" onclick="doLogin()">Sign In</button>
+      <button class="btn-ghost" onclick="showTab('forgot')">Forgot password?</button>
+    </div>
+
+    <!-- REGISTER PANEL -->
+    <div class="form-panel" id="panel-register">
+      <div class="msg-err" id="reg-err"></div>
+      <div class="msg-ok"  id="reg-ok"></div>
+      <div class="two-col">
+        <div class="field">
+          <label>First Name</label>
+          <input type="text" id="reg-fname" placeholder="Paul">
+        </div>
+        <div class="field">
+          <label>Last Name <span style="opacity:0.45;font-weight:400;">(optional)</span></label>
+          <input type="text" id="reg-lname" placeholder="Smith">
+        </div>
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="reg-email" placeholder="you@email.com">
+      </div>
+      <div class="field">
+        <label>Phone</label>
+        <input type="tel" id="reg-phone" placeholder="+91 XXXXXXXXXX" inputmode="numeric">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="reg-password" placeholder="Min 6 characters" onkeydown="if(event.key==='Enter')doRegister()">
+      </div>
+      <button class="btn-submit" id="reg-btn" onclick="doRegister()">Create Account</button>
+      <button class="btn-ghost" onclick="showTab('login')">Already have an account? Sign in</button>
+    </div>
+
+    <!-- FORGOT PASSWORD PANEL -->
+    <div class="form-panel" id="panel-forgot">
+      <div class="msg-ok"  id="forgot-ok"></div>
+      <div class="msg-err" id="forgot-err"></div>
+      <p style="color:rgba(255,255,255,0.45);font-size:0.9rem;margin-bottom:20px;">Enter your email and we'll send a reset link.</p>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="forgot-email" placeholder="you@email.com" onkeydown="if(event.key==='Enter')doForgot()">
+      </div>
+      <button class="btn-submit" onclick="doForgot()">Send Reset Link</button>
+      <button class="btn-ghost" onclick="showTab('login')">← Back to Login</button>
+    </div>
+
+  </div>
+</main>
+
+<script>
+'use strict';
+
+/* ── TAB SWITCHING ── */
+function showTab(tab) {
+  ['login', 'register', 'forgot'].forEach(function(t) {
+    document.getElementById('panel-' + t).classList.toggle('active', t === tab);
+    var btn = document.getElementById('tab-' + t);
+    if (btn) btn.classList.toggle('active', t === tab);
+  });
+  document.querySelectorAll('.msg-err, .msg-ok').forEach(function(el) {
+    el.style.display = 'none';
+    el.textContent = '';
+  });
+}
+
+// Auto-switch tab from URL param e.g. /login?tab=register
+var _urlTab = new URLSearchParams(location.search).get('tab');
+if (_urlTab === 'register') showTab('register');
+
+/* ── HELPERS ── */
+function _val(id) {
+  var el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+function _showErr(id, msg) {
+  var el = document.getElementById(id);
+  if (el) { el.textContent = msg; el.style.display = 'block'; }
+}
+function _showErrHTML(id, html) {
+  var el = document.getElementById(id);
+  if (el) { el.innerHTML = html; el.style.display = 'block'; }
+}
+function _showOk(id, msg) {
+  var el = document.getElementById(id);
+  if (el) { el.textContent = msg; el.style.display = 'block'; }
+}
+function _hide(id) {
+  var el = document.getElementById(id);
+  if (el) { el.textContent = ''; el.style.display = 'none'; }
+}
+function _busy(btnId, txt) {
+  var b = document.getElementById(btnId);
+  if (b) { b.disabled = true; b._orig = b.textContent; b.textContent = txt; }
+}
+function _done(btnId) {
+  var b = document.getElementById(btnId);
+  if (b) { b.disabled = false; b.textContent = b._orig || 'Submit'; }
+}
+function _saveSession(token, user) {
+  localStorage.setItem('pmp_token', token);
+  localStorage.setItem('pmp_user', JSON.stringify(user));
+}
+function _redirect(user) {
+  var next = new URLSearchParams(location.search).get('next') || '/';
+  setTimeout(function() { window.location.href = next; }, 700);
+}
+
+/* ── OFFLINE STORE ── */
+function _getUsers() {
+  try { return JSON.parse(localStorage.getItem('pmp_mock_users') || '[]'); } catch(e) { return []; }
+}
+function _saveUsers(users) {
+  localStorage.setItem('pmp_mock_users', JSON.stringify(users));
+}
+
+// Always keep admin synced in local store
+(function() {
+  var ADMIN = { id: 'admin_paul_001', firstName: 'Paul', lastName: 'Admin',
+    email: 'paulsubhasini31@gmail.com', phone: '0000000000', password: 'Admin@123', role: 'admin' };
+  var users = _getUsers();
+  var idx = users.findIndex(function(u) { return u.email === ADMIN.email; });
+  if (idx === -1) { users.push(ADMIN); }
+  else { users[idx] = Object.assign({}, users[idx], ADMIN); }
+  _saveUsers(users);
+})();
+
+function _offlineLogin(email, password) {
+  var users = _getUsers();
+  var user = users.find(function(u) { return u.email === email.toLowerCase().trim(); });
+  if (!user) return { success: false, message: 'No account found. Please register first.' };
+  if (user.password !== password) return { success: false, message: 'Incorrect password.' };
+  return { success: true, token: 'offline_' + user.id,
+    user: { id: user.id, firstName: user.firstName, lastName: user.lastName, email: user.email, role: user.role } };
+}
+
+function _offlineRegister(firstName, lastName, email, phone, password) {
+  var users = _getUsers();
+  var emailLower = email.toLowerCase().trim();
+  if (users.find(function(u) { return u.email === emailLower; })) {
+    return { success: false, message: 'Email already registered. Please log in instead.' };
+  }
+  var newUser = { id: 'usr_' + Date.now(), firstName: firstName, lastName: lastName || '-',
+    email: emailLower, phone: phone, password: password, role: 'user' };
+  users.push(newUser);
+  _saveUsers(users);
+  return { success: true, token: 'offline_' + newUser.id,
+    user: { id: newUser.id, firstName: newUser.firstName, lastName: newUser.lastName, email: newUser.email, role: newUser.role } };
+}
+
+/* ── API HELPER — returns null on network failure (triggers offline mode) ── */
+async function _api(url, body) {
+  try {
+    var r = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    var data = await r.json();
+    if (!data.success && data.message && data.message.indexOf('validation failed') !== -1) {
+      if (data.message.indexOf('firstName') !== -1) data.message = 'Please enter your first name.';
+      else if (data.message.indexOf('email') !== -1) data.message = 'Please enter a valid email.';
+      else data.message = 'Please fill in all required fields.';
+    }
+    return data;
+  } catch(e) {
+    return null; // network down — use offline
+  }
+}
+
+/* ── LOGIN ── */
+async function doLogin() {
+  _hide('login-err');
+  var email = _val('login-email');
+  var pass  = _val('login-password');
+  if (!email) return _showErr('login-err', 'Please enter your email.');
+  if (!pass)  return _showErr('login-err', 'Please enter your password.');
+
+  _busy('login-btn', 'Signing in…');
+  var data = await _api('/api/auth/login', { email: email, password: pass });
+  var d = data !== null ? data : _offlineLogin(email, pass);
+  _done('login-btn');
+
+  if (d.success) {
+    _saveSession(d.token, d.user);
+    var btn = document.getElementById('login-btn');
+    btn.textContent = 'Welcome back, ' + d.user.firstName + '!';
+    btn.style.background = '#22c55e';
+    _redirect(d.user);
+  } else {
+    _showErr('login-err', d.message || 'Login failed. Please try again.');
+  }
+}
+
+/* ── REGISTER ── */
+async function doRegister() {
+  _hide('reg-err');
+  _hide('reg-ok');
+
+  var fname = _val('reg-fname');
+  var lname = _val('reg-lname') || '-';
+  var email = _val('reg-email');
+  var phone = _val('reg-phone');
+  var pass  = _val('reg-password');
+
+  if (!fname) return _showErr('reg-err', 'Please enter your first name.');
+  if (!email) return _showErr('reg-err', 'Please enter your email address.');
+  if (!phone) return _showErr('reg-err', 'Please enter your phone number.');
+  if (phone.indexOf('@') !== -1) return _showErr('reg-err', 'Phone should be a number, not an email.');
+  if (phone.replace(/[^0-9]/g, '').length < 7) return _showErr('reg-err', 'Please enter a valid phone number.');
+  if (!pass)  return _showErr('reg-err', 'Please enter a password.');
+  if (pass.length < 6) return _showErr('reg-err', 'Password must be at least 6 characters.');
+
+  _busy('reg-btn', 'Creating account…');
+  var data = await _api('/api/auth/register', {
+    firstName: fname, lastName: lname, email: email, phone: phone, password: pass
+  });
+  var d = data !== null ? data : _offlineRegister(fname, lname, email, phone, pass);
+  _done('reg-btn');
+
+  if (d.success) {
+    _saveSession(d.token, d.user);
+    _showOk('reg-ok', 'Account created! Redirecting…');
+    document.getElementById('reg-btn').style.background = '#22c55e';
+    _redirect(d.user);
+  } else {
+    var msg = d.message || 'Registration failed. Please try again.';
+    var msgLower = msg.toLowerCase();
+    if (msgLower.indexOf('already registered') !== -1 || msgLower.indexOf('already exists') !== -1) {
+      // Pre-fill login email and show clickable link
+      document.getElementById('login-email').value = email;
+      _showErrHTML('reg-err', 'This email is already registered. <a href="#" onclick="showTab(\'login\');return false;" style="color:#4ade80;text-decoration:underline;">Click here to log in</a>');
+    } else {
+      _showErr('reg-err', msg);
+    }
+  }
+}
+
+/* ── FORGOT PASSWORD ── */
+async function doForgot() {
+  _hide('forgot-err');
+  _hide('forgot-ok');
+  var email = _val('forgot-email');
+  if (!email) return _showErr('forgot-err', 'Please enter your email.');
+  var data = await _api('/api/auth/forgot-password', { email: email });
+  if (data === null) return _showErr('forgot-err', 'Server is offline. Please try again later.');
+  if (data.success) _showOk('forgot-ok', data.message);
+  else _showErr('forgot-err', data.message);
+}
+</script>
+</body>
+</html>

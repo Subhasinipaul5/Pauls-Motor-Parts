@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parts Catalog — Pauls Motor Parts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <style>
+    .filter-btn { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.6); padding:8px 18px; border-radius:8px; font-size:0.85rem; font-weight:500; cursor:pointer; font-family:inherit; transition:0.2s; }
+    .filter-btn:hover, .filter-btn.active { background:#4ade80; color:#000; border-color:#4ade80; font-weight:700; }
+    .sort-select { background:#1a2a1a; border:1px solid rgba(255,255,255,0.2); color:#e8f5e9; padding:8px 14px; border-radius:8px; font-size:0.85rem; font-family:inherit; cursor:pointer; outline:none; }
+    .search-bar { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff; padding:10px 18px; border-radius:10px; font-size:0.9rem; font-family:inherit; outline:none; width:100%; max-width:400px; }
+    .search-bar:focus { border-color:#4ade80; }
+    .search-bar::placeholder { color:rgba(255,255,255,0.25); }
+
+    @media (max-width: 768px) {
+      .search-bar { max-width: 100% !important; }
+      #filter-row { gap: 8px !important; overflow-x: auto; flex-wrap: nowrap !important; padding-bottom: 6px; -webkit-overflow-scrolling: touch; }
+      #filter-row .filter-btn { flex-shrink: 0; padding: 7px 14px !important; font-size: 0.8rem !important; }
+      main { padding: 70px 16px 40px !important; }
+      h1 { font-size: 2rem !important; }
+    }
+    @media (max-width: 480px) {
+      main { padding: 60px 14px 32px !important; }
+    }
+  </style>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+  <!-- 3D animated background -->
+  <div class="bg-3d-layer">
+    <div class="bg-3d-orb orb-1"></div>
+    <div class="bg-3d-orb orb-2"></div>
+    <div class="bg-3d-orb orb-3"></div>
+    <div class="bg-3d-orb orb-4"></div>
+  </div>
+  <!-- NAVBAR -->
+  <div style="background:#0c1810;border-bottom:1px solid rgba(170,230,180,0.14);padding:14px 48px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;">
+    <a href="/" style="font-size:1.4rem;font-weight:700;color:#fff;text-decoration:none;letter-spacing:-0.03em;">🔧 Pauls<span style="color:#4ade80;">Motor</span></a>
+    <div class="nav-links-center" style="display:flex;gap:28px;align-items:center;">
+      <a href="/" style="color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.9rem;">Home</a>
+      <a href="/products" style="color:#fff;text-decoration:none;font-size:0.9rem;font-weight:600;">Products</a>
+      <a href="/orders" style="color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.9rem;">Orders</a>
+    </div>
+    <div style="display:flex;gap:12px;align-items:center;">
+      <button onclick="openCart()" class="nav-icon-btn">🛒 <span id="cart-badge" style="background:#4ade80;color:#000;border-radius:50%;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;">0</span></button>
+      <button onclick="openAuthModal()" id="auth-btn" style="background:#fff;color:#000;padding:9px 20px;border-radius:8px;border:none;font-size:0.875rem;font-weight:600;cursor:pointer;font-family:inherit;">Login</button>
+      <button class="hamburger-btn" onclick="toggleMobileNav()" title="Menu" aria-label="Open menu">☰</button>
+    </div>
+  </div>
+
+  <!-- Mobile Nav Drawer -->
+  <div class="mobile-nav-overlay" id="mobile-nav-overlay" onclick="toggleMobileNav(false)"></div>
+  <div class="mobile-nav-drawer" id="mobile-nav-drawer">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+      <span style="color:#fff;font-weight:700;font-size:1.1rem;">Menu</span>
+      <button onclick="toggleMobileNav(false)" style="background:none;border:none;color:rgba(255,255,255,0.5);font-size:1.4rem;cursor:pointer;">✕</button>
+    </div>
+    <a href="/" onclick="toggleMobileNav(false)">🏠 Home</a>
+    <a href="/products" onclick="toggleMobileNav(false)">🔧 Products</a>
+    <a href="/orders" onclick="toggleMobileNav(false)">📦 Orders</a>
+    <a href="/admin" id="admin-panel-link-mobile" onclick="toggleMobileNav(false)" style="display:none;color:#4ade80;font-weight:700;">🛠️ Admin Dashboard</a>
+    <a href="#" onclick="openChatbot();toggleMobileNav(false);return false;">🤖 AI Assistant</a>
+  </div>
+
+  <main style="background:#0c1810;min-height:100vh;padding:48px;">
+    <div style="max-width:1400px;margin:0 auto;">
+      <!-- Header -->
+      <div style="margin-bottom:40px;">
+        <span style="color:#4ade80;font-size:0.8rem;font-weight:600;text-transform:uppercase;letter-spacing:3px;">Catalog</span>
+        <h1 style="font-size:2.8rem;font-weight:800;color:#fff;margin:10px 0 0 0;letter-spacing:-0.03em;">All Auto Parts</h1>
+      </div>
+
+      <!-- Search + Sort -->
+      <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:28px;">
+        <input type="text" id="search-input" class="search-bar" placeholder="🔍  Search parts, brands, part numbers..." oninput="debounceSearch(this.value)">
+        <select id="sort-select" class="sort-select" onchange="applySort(this.value)">
+          <option value="newest">Newest First</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="featured">Featured</option>
+        </select>
+      </div>
+
+      <!-- Category Filters -->
+      <div id="filter-row" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:36px;">
+        <button class="filter-btn active" onclick="setCategory('All',this)">All</button>
+      </div>
+
+      <!-- Results count -->
+      <p id="results-count" style="color:rgba(255,255,255,0.35);font-size:0.875rem;margin-bottom:24px;"></p>
+
+      <!-- Products Grid -->
+      <div id="products-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;"></div>
+
+      <!-- Pagination -->
+      <div id="pagination" style="display:flex;justify-content:center;gap:10px;margin-top:48px;"></div>
+    </div>
+  </main>
+
+  <!-- CART DRAWER + modals from main app -->
+  <div id="cart-overlay" onclick="closeCart()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:900;"></div>
+  <div id="cart-drawer" style="display:none;position:fixed;top:0;right:0;width:420px;max-width:100vw;height:100vh;background:#101f15;border-left:1px solid rgba(170,230,180,0.14);z-index:901;overflow-y:auto;padding:28px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;">
+      <h2 style="color:#fff;font-size:1.5rem;font-weight:700;margin:0;">Your Cart 🛒</h2>
+      <button onclick="closeCart()" style="background:none;border:none;color:rgba(255,255,255,0.4);font-size:1.5rem;cursor:pointer;">✕</button>
+    </div>
+    <div id="cart-items-list"></div>
+    <div id="cart-footer" style="display:none;border-top:1px solid rgba(170,230,180,0.14);padding-top:20px;margin-top:20px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="color:rgba(255,255,255,0.5);">Subtotal</span><span style="color:#fff;font-weight:600;" id="cart-subtotal">₹0</span></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:16px;"><span style="color:#22c55e;font-size:0.9rem;">You save</span><span style="color:#22c55e;font-weight:600;" id="cart-savings">₹0</span></div>
+      <button onclick="openCheckout()" class="btn-primary" style="width:100%;padding:16px;">Proceed to Checkout →</button>
+    </div>
+  </div>
+
+  <div id="auth-modal" class="modal-backdrop" style="display:none;">
+    <div class="modal-box">
+      <button onclick="closeAuthModal()" style="position:absolute;top:20px;right:20px;background:none;border:none;color:rgba(255,255,255,0.4);font-size:1.5rem;cursor:pointer;">✕</button>
+      <div style="display:flex;margin-bottom:28px;gap:4px;">
+        <button id="tab-login" onclick="switchAuthTab('login')" class="auth-tab active">Login</button>
+        <button id="tab-register" onclick="switchAuthTab('register')" class="auth-tab">Register</button>
+      </div>
+      <div id="form-login">
+        <div id="login-err" class="form-err" style="display:none;"></div>
+        <div class="form-group"><label>Email</label><input type="email" id="login-email" placeholder="you@email.com"></div>
+        <div class="form-group"><label>Password</label><input type="password" id="login-password" placeholder="Your password"></div>
+        <button onclick="doLogin()" class="btn-primary" id="login-btn">Sign In</button>
+        <button onclick="switchAuthTab('forgot')" style="background:none;border:none;color:rgba(255,255,255,0.4);font-size:0.875rem;cursor:pointer;margin-top:12px;font-family:inherit;">Forgot password?</button>
+      </div>
+      <div id="form-register" style="display:none;">
+        <div id="reg-err" class="form-err" style="display:none;"></div>
+        <div id="reg-ok" class="form-ok" style="display:none;"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="form-group"><label>First Name</label><input type="text" id="reg-fname" placeholder="Paul"></div>
+          <div class="form-group"><label>Last Name <span style="opacity:0.45;font-weight:400;">(optional)</span></label><input type="text" id="reg-lname" placeholder="Smith"></div>
+        </div>
+        <div class="form-group"><label>Email</label><input type="email" id="reg-email" placeholder="you@email.com"></div>
+        <div class="form-group"><label>Phone</label><input type="tel" id="reg-phone" placeholder="+91 XXXXXXXXXX"></div>
+        <div class="form-group"><label>Password</label><input type="password" id="reg-password" placeholder="Min 6 characters"></div>
+        <button onclick="doRegister()" class="btn-primary" id="reg-btn">Create Account</button>
+      </div>
+      <div id="form-forgot" style="display:none;">
+        <div id="forgot-msg" class="form-ok" style="display:none;"></div>
+        <div id="forgot-err" class="form-err" style="display:none;"></div>
+        <div class="form-group"><label>Email</label><input type="email" id="forgot-email" placeholder="you@email.com"></div>
+        <button onclick="doForgot()" class="btn-primary">Send Reset Link</button>
+        <button onclick="switchAuthTab('login')" style="background:none;border:none;color:rgba(255,255,255,0.4);font-size:0.875rem;cursor:pointer;margin-top:12px;font-family:inherit;">← Back</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="checkout-modal" class="modal-backdrop" style="display:none;">
+    <div class="modal-box" style="max-width:500px;">
+      <button onclick="document.getElementById('checkout-modal').style.display='none'" style="position:absolute;top:20px;right:20px;background:none;border:none;color:rgba(255,255,255,0.4);font-size:1.5rem;cursor:pointer;">✕</button>
+      <h2 style="color:#fff;font-size:1.5rem;font-weight:700;margin:0 0 24px 0;">Checkout</h2>
+      <div id="checkout-err" class="form-err" style="display:none;"></div>
+      <div id="checkout-ok" class="form-ok" style="display:none;"></div>
+      <div class="form-group"><label>Full Name</label><input type="text" id="co-name" placeholder="Your name"></div>
+      <div class="form-group"><label>Phone</label><input type="tel" id="co-phone" placeholder="+91 XXXXXXXXXX"></div>
+      <div class="form-group"><label>Email</label><input type="email" id="co-email" placeholder="you@email.com"></div>
+      <div class="form-group"><label>Notes</label><textarea id="co-notes" placeholder="Any notes..." style="height:70px;resize:none;"></textarea></div>
+      <div style="background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.2);border-radius:10px;padding:16px;margin-bottom:20px;">
+        <div style="display:flex;justify-content:space-between;"><span style="color:rgba(255,255,255,0.6);">Order Total</span><span style="color:#fff;font-weight:700;font-size:1.2rem;" id="co-total">₹0</span></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <button onclick="placeOrderRazorpay()" class="btn-primary">Pay via Razorpay 💳</button>
+        <button onclick="placeOrderCOD()" style="background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.15);padding:14px;border-radius:10px;font-weight:600;cursor:pointer;font-family:inherit;">WhatsApp Order 💬</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="product-modal" class="modal-backdrop" style="display:none;">
+    <div class="modal-box" style="max-width:700px;">
+      <button onclick="closeProductModal()" style="position:absolute;top:20px;right:20px;background:none;border:none;color:rgba(255,255,255,0.4);font-size:1.5rem;cursor:pointer;">✕</button>
+      <div id="product-modal-content"></div>
+    </div>
+  </div>
+
+  <div id="user-menu" style="display:none;position:fixed;top:70px;right:48px;background:rgba(170,230,180,0.10);border:1px solid rgba(170,230,180,0.14);border-radius:12px;padding:8px;z-index:500;min-width:200px;">
+    <div style="padding:12px 16px;border-bottom:1px solid rgba(170,230,180,0.14);margin-bottom:4px;">
+      <p style="color:#fff;font-weight:600;font-size:0.9rem;margin:0;" id="user-name-display"></p>
+      <p style="color:rgba(255,255,255,0.4);font-size:0.8rem;margin:4px 0 0 0;" id="user-email-display"></p>
+    </div>
+    <a href="/admin" id="admin-panel-link" class="menu-item" style="display:none;color:#4ade80;font-weight:700;">🛠️ Admin Dashboard</a>
+    <a href="/orders" class="menu-item">📦 My Orders</a>
+    <button onclick="doChangePassword()" class="menu-item" style="width:100%;text-align:left;">🔑 Change Password</button>
+    <button onclick="doLogout()" class="menu-item danger" style="width:100%;text-align:left;">🚪 Logout</button>
+  </div>
+
+  <div id="cpw-modal" class="modal-backdrop" style="display:none;">
+    <div class="modal-box" style="max-width:400px;">
+      <button onclick="document.getElementById('cpw-modal').style.display='none'" style="position:absolute;top:20px;right:20px;background:none;border:none;color:rgba(255,255,255,0.4);font-size:1.5rem;cursor:pointer;">✕</button>
+      <h2 style="color:#fff;font-weight:700;margin:0 0 24px 0;">Change Password</h2>
+      <div id="cpw-msg" class="form-ok" style="display:none;"></div>
+      <div id="cpw-err" class="form-err" style="display:none;"></div>
+      <div class="form-group"><label>Current Password</label><input type="password" id="cpw-current" placeholder="Current password"></div>
+      <div class="form-group"><label>New Password</label><input type="password" id="cpw-new" placeholder="Min 6 characters"></div>
+      <div class="form-group"><label>Confirm New</label><input type="password" id="cpw-confirm" placeholder="Repeat new password"></div>
+      <button onclick="submitChangePw()" class="btn-primary">Update Password</button>
+    </div>
+  </div>
+
+  <button onclick="openChatbot()" id="chatbot-fab" style="position:fixed;bottom:28px;right:28px;width:56px;height:56px;background:#4ade80;border:none;border-radius:50%;font-size:1.4rem;cursor:pointer;z-index:800;box-shadow:0 8px 32px rgba(74,222,128,0.4);">🔧</button>
+  <!-- Chatbot panel same as index -->
+  <div id="chatbot-overlay" onclick="closeChatbot()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1000;"></div>
+  <div id="chatbot-panel" style="display:none;position:fixed;bottom:0;right:0;width:420px;max-width:100vw;height:620px;background:#0c1810;border:1px solid rgba(170,230,180,0.14);border-radius:20px 20px 0 0;z-index:1001;flex-direction:column;overflow:hidden;">
+    <div style="padding:18px 20px;border-bottom:1px solid rgba(170,230,180,0.14);display:flex;align-items:center;justify-content:space-between;background:#101f15;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:40px;height:40px;background:#4ade80;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;">🔧</div>
+        <div><p style="color:#fff;font-weight:600;margin:0;font-size:0.95rem;">Parts AI Assistant</p><p style="color:#22c55e;font-size:0.75rem;margin:0;">● Online</p></div>
+      </div>
+      <div style="display:flex;gap:6px;">
+        <button onclick="openChatbotCamera()" title="Take a photo" style="background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.3);border-radius:8px;padding:8px 10px;font-size:0.78rem;cursor:pointer;font-family:inherit;white-space:nowrap;">📸 Camera</button>
+        <button onclick="openChatbotGallery()" title="Choose from gallery" style="background:rgba(59,130,246,0.15);color:#60a5fa;border:1px solid rgba(59,130,246,0.3);border-radius:8px;padding:8px 10px;font-size:0.78rem;cursor:pointer;font-family:inherit;white-space:nowrap;">🖼️ Gallery</button>
+        <button onclick="closeChatbot()" style="background:none;border:none;color:rgba(255,255,255,0.4);font-size:1.2rem;cursor:pointer;">✕</button>
+      </div>
+    </div>
+    <input type="file" id="gallery-file-input" accept="image/*" style="display:none;" onchange="handleGalleryFile(this)">
+    <div id="camera-area" style="display:none;padding:16px;border-bottom:1px solid rgba(170,230,180,0.14);background:#101f15;">
+      <video id="cam-video" style="width:100%;border-radius:10px;max-height:200px;object-fit:cover;" autoplay muted playsinline></video>
+      <div style="display:flex;gap:10px;margin-top:12px;">
+        <button onclick="capturePhoto()" style="flex:1;background:#4ade80;color:#000;border:none;padding:10px;border-radius:8px;font-weight:700;cursor:pointer;font-family:inherit;">📸 Capture</button>
+        <button onclick="closeCamera()" style="flex:1;background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.15);padding:10px;border-radius:8px;cursor:pointer;font-family:inherit;">Cancel</button>
+      </div>
+      <canvas id="cam-canvas" style="display:none;"></canvas>
+    </div>
+    <div id="img-preview-area" style="display:none;padding:12px 16px;border-bottom:1px solid rgba(170,230,180,0.14);background:#101f15;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <img id="img-preview" src="" style="width:60px;height:60px;object-fit:cover;border-radius:8px;border:1px solid rgba(255,255,255,0.1);">
+        <div><p style="color:#fff;font-size:0.875rem;margin:0 0 4px 0;font-weight:500;">Photo ready</p><button onclick="clearPhoto()" style="color:#4ade80;background:none;border:none;font-size:0.8rem;cursor:pointer;font-family:inherit;">Remove ✕</button></div>
+      </div>
+    </div>
+    <div id="chatbot-messages" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;"></div>
+    <div style="padding:14px 16px;border-top:1px solid rgba(170,230,180,0.14);display:flex;gap:10px;align-items:center;">
+      <input id="chat-input" type="text" placeholder="Ask about any auto part..." style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:12px 16px;color:#fff;font-size:0.9rem;font-family:inherit;outline:none;" onkeydown="if(event.key==='Enter') sendChat()">
+      <button onclick="sendChat()" style="background:#4ade80;border:none;color:#000;width:42px;height:42px;border-radius:10px;font-size:1.1rem;cursor:pointer;">→</button>
+    </div>
+  </div>
+
+  <script src="/assets/js/app.js"></script>
+  <script>
+    // Products page specific logic
+    let currentCategory = 'All', currentSort = 'newest', currentSearch = '', currentPage = 1;
+    let searchTimer;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadCategoryFilters();
+      loadProducts();
+      const urlCat = new URLSearchParams(window.location.search).get('category');
+      if (urlCat) { currentCategory = urlCat; }
+    });
+
+    async function loadCategoryFilters() {
+      const row = document.getElementById('filter-row');
+      if (!row) return;
+      try {
+        const r = await fetch('/api/products/categories');
+        const d = await r.json();
+        row.innerHTML = `<button class="filter-btn ${currentCategory==='All'?'active':''}" onclick="setCategory('All',this)">All</button>`;
+        (d.categories||[]).forEach(c => {
+          const btn = document.createElement('button');
+          btn.className = `filter-btn ${currentCategory===c?'active':''}`;
+          btn.textContent = c;
+          btn.onclick = () => setCategory(c, btn);
+          row.appendChild(btn);
+        });
+      } catch {}
+    }
+
+    function setCategory(cat, btn) {
+      currentCategory = cat; currentPage = 1;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      loadProducts();
+    }
+
+    function applySort(val) { currentSort = val; currentPage = 1; loadProducts(); }
+    function debounceSearch(val) { clearTimeout(searchTimer); searchTimer = setTimeout(() => { currentSearch = val; currentPage = 1; loadProducts(); }, 400); }
+
+    async function loadProducts() {
+      const grid = document.getElementById('products-grid');
+      const count = document.getElementById('results-count');
+      if (!grid) return;
+      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px 0;"><div style="font-size:2rem;margin-bottom:12px;">⏳</div><p style="color:rgba(255,255,255,0.3);">Loading parts...</p></div>';
+      try {
+        const params = new URLSearchParams({ sort: currentSort, page: currentPage, limit: 24 });
+        if (currentCategory !== 'All') params.set('category', currentCategory);
+        if (currentSearch) params.set('search', currentSearch);
+        const r = await fetch('/api/products?' + params);
+        const d = await r.json();
+        if (!d.products?.length) {
+          grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px 0;"><div style="font-size:3rem;margin-bottom:12px;">🔍</div><p style="color:rgba(255,255,255,0.3);">No parts found. Try a different search.</p></div>';
+          if (count) count.textContent = '';
+          return;
+        }
+        if (count) count.textContent = `Showing ${d.products.length} of ${d.total} parts`;
+        grid.innerHTML = d.products.map(p => productCard(p)).join('');
+        renderPagination(d.page, d.pages);
+      } catch(e) {
+        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px 0;color:#f87171;">Error loading products. Please refresh.</div>';
+      }
+    }
+
+    function renderPagination(page, pages) {
+      const el = document.getElementById('pagination');
+      if (!el || pages <= 1) { if(el) el.innerHTML=''; return; }
+      let html = '';
+      for (let i = 1; i <= pages; i++) {
+        html += `<button onclick="goPage(${i})" style="background:${i===page?'#4ade80':'rgba(255,255,255,0.08)'};color:${i===page?'#000':'#fff'};border:1px solid ${i===page?'#4ade80':'rgba(255,255,255,0.15)'};padding:8px 16px;border-radius:8px;cursor:pointer;font-family:inherit;font-weight:${i===page?700:400};">${i}</button>`;
+      }
+      el.innerHTML = html;
+    }
+
+    function goPage(p) { currentPage = p; loadProducts(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  </script>
+</body>
+</html>
