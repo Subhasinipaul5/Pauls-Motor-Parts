@@ -266,7 +266,7 @@ async function doLogin() {
   if (!pass)  return _showErr('login-err', 'Please enter your password.');
 
   _busy('login-btn', 'Signing in…');
-  var data = await _api('/api/auth/login', { email: email, password: pass });
+ var data = await _api('https://pauls-motor-parts.onrender.com/api/auth/login', { email: email, password: pass });
   var d = data !== null ? data : _offlineLogin(email, pass);
   _done('login-btn');
 
@@ -301,7 +301,7 @@ async function doRegister() {
   if (pass.length < 6) return _showErr('reg-err', 'Password must be at least 6 characters.');
 
   _busy('reg-btn', 'Creating account…');
-  var data = await _api('/api/auth/register', {
+  var data = await _api('https://pauls-motor-parts.onrender.com/api/auth/register',{
     firstName: fname, lastName: lname, email: email, phone: phone, password: pass
   });
   var d = data !== null ? data : _offlineRegister(fname, lname, email, phone, pass);
@@ -331,7 +331,7 @@ async function doForgot() {
   _hide('forgot-ok');
   var email = _val('forgot-email');
   if (!email) return _showErr('forgot-err', 'Please enter your email.');
-  var data = await _api('/api/auth/forgot-password', { email: email });
+ var data = await _api('https://pauls-motor-parts.onrender.com/api/auth/forgot-password', { email: email });
   if (data === null) return _showErr('forgot-err', 'Server is offline. Please try again later.');
   if (data.success) _showOk('forgot-ok', data.message);
   else _showErr('forgot-err', data.message);
